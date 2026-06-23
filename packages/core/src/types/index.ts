@@ -1,13 +1,22 @@
 import type { Dispatch, SetStateAction } from "react";
 
+/**
+ * Represents the Stellar network environment.
+ */
 export type StellarNetwork = "testnet" | "mainnet";
 
+/**
+ * Configuration details for a specific Stellar network.
+ */
 export interface NetworkConfig {
   network: StellarNetwork;
   horizonUrl: string;
   sorobanUrl: string;
 }
 
+/**
+ * Pre-defined configurations for supported Stellar networks.
+ */
 export const NETWORK_CONFIGS: Record<StellarNetwork, NetworkConfig> = {
   testnet: {
     network: "testnet",
@@ -21,8 +30,14 @@ export const NETWORK_CONFIGS: Record<StellarNetwork, NetworkConfig> = {
   },
 };
 
+/**
+ * Supported wallet providers.
+ */
 export type WalletType = "freighter" | "albedo" | "rabet";
 
+/**
+ * The current state of the wallet connection.
+ */
 export interface WalletState {
   connected: boolean;
   address: string | null;
@@ -32,15 +47,27 @@ export interface WalletState {
   error: string | null;
 }
 
+/**
+ * Represents the native Stellar asset (XLM).
+ */
 export type NativeAsset = "XLM";
 
+/**
+ * Represents a custom issued asset on the Stellar network.
+ */
 export interface IssuedAsset {
   code: string;
   issuer: string;
 }
 
+/**
+ * Can be either a native asset or an issued asset.
+ */
 export type Asset = NativeAsset | IssuedAsset;
 
+/**
+ * Represents a balance entry for an account.
+ */
 export interface Balance {
   asset: Asset;
   balance: string;
@@ -49,6 +76,9 @@ export interface Balance {
   selling?: string;
 }
 
+/**
+ * Detailed account information from the Stellar network.
+ */
 export interface AccountInfo {
   address: string;
   sequence: string;
@@ -66,8 +96,14 @@ export interface AccountInfo {
   }[];
 }
 
+/**
+ * The current status of a transaction on the network.
+ */
 export type TransactionStatus = "pending" | "success" | "failed" | "not_found";
 
+/**
+ * Result details from a submitted or queried transaction.
+ */
 export interface TransactionResult {
   hash: string;
   status: TransactionStatus;
@@ -76,6 +112,9 @@ export interface TransactionResult {
   fee?: string;
 }
 
+/**
+ * Options for sending a payment transaction.
+ */
 export interface SendPaymentOptions {
   to: string;
   asset: Asset;
@@ -83,17 +122,26 @@ export interface SendPaymentOptions {
   memo?: string;
 }
 
+/**
+ * Result returned after a payment is sent.
+ */
 export interface SendPaymentResult {
   hash: string;
   status: TransactionStatus;
 }
 
+/**
+ * Options for calling a Soroban smart contract.
+ */
 export interface ContractCallOptions {
   contractId: string;
   method: string;
   args?: unknown[];
 }
 
+/**
+ * Context value provided by the StellarProvider.
+ */
 export interface StellarContextValue {
   network: StellarNetwork;
   networkConfig: NetworkConfig;
