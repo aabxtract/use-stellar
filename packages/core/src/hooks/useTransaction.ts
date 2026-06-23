@@ -15,6 +15,17 @@ export interface UseTransactionReturn {
   refetch:     () => void;
 }
 
+/**
+ * Fetches the status and details of a specific transaction by hash.
+ *
+ * @param options - Configuration options
+ * @param options.hash - The transaction hash to look up
+ * @param options.watch - When true, keeps polling until the transaction succeeds or fails
+ * @returns `{ transaction, loading, error, refetch }`
+ *
+ * @example
+ * const { transaction } = useTransaction({ hash: "...", watch: true })
+ */
 export function useTransaction({
   hash,
   watch = false,
