@@ -4,6 +4,10 @@ import {
   isConnected,
   requestAccess,
 } from "@stellar/freighter-api";
+import {
+  isConnected as lobstrIsConnected,
+  getPublicKey as lobstrGetPublicKey,
+} from "@lobstrco/signer-extension-api";
 import { useStellarContext } from "../context/StellarProvider";
 import type { WalletState, WalletType } from "../types";
 
@@ -24,6 +28,8 @@ export function useWallet(): UseWalletReturn {
 
         if (walletType === "freighter") {
           address = await connectFreighter(network);
+        } else if (walletType === "lobstr") {
+          address = await connectLobstr();
         } else {
           throw new Error(
             `Wallet "${walletType}" not yet supported. ` +
@@ -101,4 +107,22 @@ async function connectFreighter(network: string): Promise<string> {
   }
 
   return access.address;
+}
+
+// ── Lobstr connector ───────────────────────────────────────────────────────
+async function connectLobstr(): Promise<string> {
+  const connected = await lobstrIsConnected();
+  if (!connected) {
+    throw new Error(
+      "LOBSTR signer extension not found. " +
+      "Install the LOBSTR Signer Extension and try again."
+    );
+  }
+
+  const publicKey = await lobstrGetPublicKey();
+  if (!publicKey) {
+    throw new Error("LOBSTR did not return a wallet address.");
+  }
+
+  return publicKey;
 }

@@ -14,6 +14,9 @@ export default function WalletDemo() {
 // Connect Freighter
 await connect("freighter")
 
+// Connect LOBSTR
+await connect("lobstr")
+
 // Disconnect
 disconnect()`}
     >
@@ -37,6 +40,13 @@ disconnect()`}
               style={btnStyle("#1d4ed8")}
             >
               {connecting ? "Connecting..." : "Connect Freighter"}
+            </button>
+            <button
+              onClick={() => connect("lobstr")}
+              disabled={connecting}
+              style={btnStyle("#7c3aed")}
+            >
+              {connecting ? "Connecting..." : "Connect LOBSTR"}
             </button>
           </>
         )}

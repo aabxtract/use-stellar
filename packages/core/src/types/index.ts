@@ -21,7 +21,7 @@ export const NETWORK_CONFIGS: Record<StellarNetwork, NetworkConfig> = {
   },
 };
 
-export type WalletType = "freighter" | "albedo" | "rabet";
+export type WalletType = "freighter" | "lobstr" | "albedo" | "rabet";
 
 export interface WalletState {
   connected: boolean;
