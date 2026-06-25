@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useStellarContext }   from "../context/StellarProvider";
 import { getHorizonServer, parseHorizonBalance } from "../utils";
 import type { AccountInfo } from "../types";
@@ -22,7 +22,7 @@ export function useAccount({ address }: UseAccountOptions = {}): UseAccountRetur
   const [loading, setLoading]    = useState(false);
   const [error,   setError]      = useState<string | null>(null);
 
-  async function fetchAccount() {
+  const fetchAccount = useCallback(async () => {
     if (!resolvedAddress) return;
 
     setLoading(true);
@@ -55,11 +55,11 @@ export function useAccount({ address }: UseAccountOptions = {}): UseAccountRetur
     } finally {
       setLoading(false);
     }
-  }
+  }, [resolvedAddress, network]);
 
   useEffect(() => {
     fetchAccount();
-  }, [resolvedAddress, network]);
+  }, [fetchAccount]);
 
   return { account, loading, error, refetch: fetchAccount };
 }
