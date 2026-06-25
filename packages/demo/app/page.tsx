@@ -9,6 +9,7 @@ const hooks = [
   { name: "useNetwork",         desc: "Current network, testnet/mainnet helper",      href: "/demo/network"     },
   { name: "useAsset",           desc: "Asset metadata — supply, issuer, home domain", href: "/demo/asset"       },
   { name: "useSorobanContract", desc: "Call a read function on a Soroban contract",   href: "/demo/soroban"     },
+  { name: "usePayments",        desc: "Fetch and paginate payment history",           href: "/demo/payments"    },
 ];
 
 export default function Home() {

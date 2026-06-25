@@ -10,6 +10,7 @@ export { useTransaction }       from "./hooks/useTransaction";
 export { useNetwork }           from "./hooks/useNetwork";
 export { useAsset }             from "./hooks/useAsset";
 export { useSorobanContract }   from "./hooks/useSorobanContract";
+export { usePayments }          from "./hooks/usePayments";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 export type {
@@ -28,6 +29,9 @@ export type {
   SendPaymentResult,
   ContractCallOptions,
   StellarContextValue,
+  NormalizedPayment,
+  UsePaymentsOptions,
+  UsePaymentsReturn,
 } from "./types";
 
 // ── Utils (public) ─────────────────────────────────────────────────────────
