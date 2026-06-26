@@ -30,6 +30,7 @@ export interface WalletState {
   wallet: WalletType | null;
   connecting: boolean;
   error: string | null;
+  walletNetwork: StellarNetwork | null; // Actual network from wallet extension
 }
 
 export type NativeAsset = "XLM";

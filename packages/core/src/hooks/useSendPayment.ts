@@ -33,6 +33,14 @@ export function useSendPayment(): UseSendPaymentReturn {
         throw new Error("Wallet not connected. Call connect() first.");
       }
 
+      // Check for network mismatch
+      if (wallet.walletNetwork && wallet.network !== wallet.walletNetwork) {
+        throw new Error(
+          `Network mismatch: Provider is on ${wallet.network} but wallet is on ${wallet.walletNetwork}. ` +
+          `Switch your wallet to ${wallet.network} or call refreshWalletNetwork() to update.`
+        );
+      }
+
       setLoading(true);
       setError(null);
 
