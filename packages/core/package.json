@@ -31,6 +31,9 @@
   "scripts": {
     "build": "tsup",
     "test": "jest",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:package": "node scripts/smoke-test.js",
+    "typecheck": "tsc --noEmit",
     "dev": "tsup --watch",
     "size": "size-limit"
   },
