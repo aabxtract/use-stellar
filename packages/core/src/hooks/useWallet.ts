@@ -86,8 +86,8 @@ async function connectFreighter(network: string): Promise<string> {
   const { isConnected, requestAccess, getNetworkDetails } =
     typeof freighterApi.isConnected === "function"
       ? freighterApi
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      : (freighterApi as any).default
+      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (freighterApi as any).default
 
   const connection = await isConnected()
   if (connection.error || !connection.isConnected) {
