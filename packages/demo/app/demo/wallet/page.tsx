@@ -1,9 +1,10 @@
 "use client";
-import { useWallet, shortenAddress } from "use-stellar";
-import { DemoCard }                  from "../../../components/DemoCard";
+import { useWallet, useFriendbot, shortenAddress } from "use-stellar";
+import { DemoCard }                                       from "../../../components/DemoCard";
 
 export default function WalletDemo() {
   const { connect, disconnect, connected, address, connecting, error, network } = useWallet();
+  const { fund, loading: funding, error: fundError, hash, funded } = useFriendbot();
 
   return (
     <DemoCard
@@ -26,6 +27,16 @@ disconnect()`}
             <button onClick={disconnect} style={btnStyle("#c00")}>
               Disconnect
             </button>
+            <button
+              onClick={() => fund()}
+              disabled={funding}
+              style={btnStyle("#059669")}
+            >
+              {funding ? "Funding..." : "Fund testnet account"}
+            </button>
+            {fundError && <Row label="Friendbot error" value={fundError} color="#f87171" />}
+            {hash && <Row label="Funded" value={hash} color="#4ade80" />}
+            {funded && !hash && <Row label="Funded" value="Success" color="#4ade80" />}
           </>
         ) : (
           <>

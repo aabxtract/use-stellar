@@ -5,6 +5,7 @@ export { StellarProvider }      from "./context/StellarProvider";
 export { useWallet }            from "./hooks/useWallet";
 export { useBalance }           from "./hooks/useBalance";
 export { useAccount }           from "./hooks/useAccount";
+export { useFriendbot }         from "./hooks/useFriendbot";
 export { useSendPayment }       from "./hooks/useSendPayment";
 export { useTransaction }       from "./hooks/useTransaction";
 export { useNetwork }           from "./hooks/useNetwork";
