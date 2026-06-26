@@ -165,6 +165,28 @@ docs: add useSendPayment example to README
 
 ---
 
+## Releases
+
+Releases are automated via `.github/workflows/release.yml`.
+
+To publish a new version:
+
+1. Update `CHANGELOG.md` — move items from `[Unreleased]` to a new versioned section, e.g. `## [0.2.0] - 2026-06-24`.
+2. Bump the version in `packages/core/package.json`.
+3. Commit and push, then tag the commit:
+
+```bash
+git tag v0.2.0
+git push origin v0.2.0
+```
+
+The workflow will automatically:
+- Run tests and build
+- Publish `packages/core` to npm (requires `NODE_AUTH_TOKEN` secret set in repository settings)
+- Create a GitHub Release with the changelog notes for that version
+
+---
+
 ## Need help?
 
 Open a [GitHub Discussion](../../discussions) or comment on the issue you're working on. No question is too basic.
