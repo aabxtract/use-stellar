@@ -1,10 +1,6 @@
-export {
-  FREIGHTER_WALLET_TYPE,
-  NETWORK_PASSPHRASES,
-  freighterAdapter,
-} from "./freighterAdapter";
-export { getWalletAdapter, getWalletAdapters } from "./registry";
-export { WalletAdapterError } from "./types";
+export { FREIGHTER_WALLET_TYPE, NETWORK_PASSPHRASES, freighterAdapter } from "./freighterAdapter"
+export { getWalletAdapter, getWalletAdapters } from "./registry"
+export { WalletAdapterError } from "./types"
 export type {
   SignTransactionOptions,
   WalletAdapter,
@@ -12,4 +8,4 @@ export type {
   WalletAdapterMetadata,
   WalletConnection,
   WalletNetworkDetails,
-} from "./types";
+} from "./types"

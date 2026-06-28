@@ -1,14 +1,14 @@
-export { StellarProvider } from "./context/StellarProvider";
+export { StellarProvider } from "./context/StellarProvider"
 
-export { useWallet } from "./hooks/useWallet";
-export { useBalance } from "./hooks/useBalance";
-export { useAccount } from "./hooks/useAccount";
-export { useSendPayment } from "./hooks/useSendPayment";
-export { useTransaction } from "./hooks/useTransaction";
-export { useNetwork } from "./hooks/useNetwork";
-export { useAsset } from "./hooks/useAsset";
-export { useSorobanContract } from "./hooks/useSorobanContract";
-export { useClaimableBalance } from "./hooks/useClaimableBalance";
+export { useWallet } from "./hooks/useWallet"
+export { useBalance } from "./hooks/useBalance"
+export { useAccount } from "./hooks/useAccount"
+export { useSendPayment } from "./hooks/useSendPayment"
+export { useTransaction } from "./hooks/useTransaction"
+export { useNetwork } from "./hooks/useNetwork"
+export { useAsset } from "./hooks/useAsset"
+export { useSorobanContract } from "./hooks/useSorobanContract"
+export { useClaimableBalance } from "./hooks/useClaimableBalance"
 export {
   FREIGHTER_WALLET_TYPE,
   NETWORK_PASSPHRASES,
@@ -16,7 +16,7 @@ export {
   freighterAdapter,
   getWalletAdapter,
   getWalletAdapters,
-} from "./wallets";
+} from "./wallets"
 
 export type {
   StellarNetwork,
@@ -36,7 +36,7 @@ export type {
   StellarContextValue,
   ClaimableBalance,
   ClaimableBalanceClaimant,
-} from "./types";
+} from "./types"
 export type {
   SignTransactionOptions,
   WalletAdapter,
@@ -44,7 +44,7 @@ export type {
   WalletAdapterMetadata,
   WalletConnection,
   WalletNetworkDetails,
-} from "./wallets";
+} from "./wallets"
 
 export {
   isBrowser,
@@ -52,4 +52,4 @@ export {
   shortenAddress,
   formatAmount,
   formatAssetCode,
-} from "./utils";
+} from "./utils"

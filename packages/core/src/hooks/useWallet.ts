@@ -1,33 +1,43 @@
-import { useCallback } from "react";
-import { useStellarContext } from "../context/StellarProvider";
-import { isBrowser } from "../utils";
-import type { WalletState, WalletType } from "../types";
-import { getWalletAdapter } from "../wallets";
+import { useCallback } from "react"
+import { useStellarContext } from "../context/StellarProvider"
+import { isBrowser } from "../utils"
+import type { WalletState, WalletType } from "../types"
+import { getWalletAdapter } from "../wallets"
 
 export interface UseWalletReturn extends WalletState {
-  connect: (wallet?: WalletType) => Promise<void>;
-  disconnect: () => void;
+  connect: (wallet?: WalletType) => Promise<void>
+  disconnect: () => void
 }
 
+/**
+ * Manages wallet connection state and provides functions to connect and disconnect.
+ *
+ * @returns `{ connected, address, network, wallet, walletName, connecting, error, connect, disconnect }`
+ *
+ * @example
+ * const { address, connect, disconnect } = useWallet()
+ * await connect("freighter")
+ */
 export function useWallet(): UseWalletReturn {
-  const { wallet, setWallet, network } = useStellarContext();
+  const { wallet, setWallet, network } = useStellarContext()
 
   const connect = useCallback(
     async (walletType: WalletType = "freighter") => {
       if (!isBrowser()) {
         setWallet(prev => ({
           ...prev,
-          error: "Wallet connection is only available in the browser. " +
-                 "Move your component to a \"use client\" boundary in Next.js / Remix.",
-        }));
-        return;
+          error:
+            "Wallet connection is only available in the browser. " +
+            'Move your component to a "use client" boundary in Next.js / Remix.',
+        }))
+        return
       }
 
-      setWallet(prev => ({ ...prev, connecting: true, error: null }));
+      setWallet(prev => ({ ...prev, connecting: true, error: null }))
 
       try {
-        const adapter = getWalletAdapter(walletType);
-        const connection = await adapter.connect(network);
+        const adapter = getWalletAdapter(walletType)
+        const connection = await adapter.connect(network)
 
         setWallet({
           connected: true,
@@ -37,21 +47,21 @@ export function useWallet(): UseWalletReturn {
           walletName: adapter.metadata.name,
           connecting: false,
           error: null,
-        });
+        })
       } catch (err) {
         setWallet(prev => ({
           ...prev,
           connecting: false,
           error: err instanceof Error ? err.message : "Failed to connect wallet",
-        }));
+        }))
       }
     },
     [setWallet, network]
-  );
+  )
 
   const disconnect = useCallback(() => {
     if (wallet.wallet) {
-      void getWalletAdapter(wallet.wallet).disconnect?.();
+      void getWalletAdapter(wallet.wallet).disconnect?.()
     }
 
     setWallet({
@@ -62,8 +72,8 @@ export function useWallet(): UseWalletReturn {
       walletName: null,
       connecting: false,
       error: null,
-    });
-  }, [setWallet, wallet.wallet]);
+    })
+  }, [setWallet, wallet.wallet])
 
-  return { ...wallet, connect, disconnect };
+  return { ...wallet, connect, disconnect }
 }

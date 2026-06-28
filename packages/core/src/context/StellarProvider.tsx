@@ -1,15 +1,7 @@
-import * as React from "react";
-import {
-  createContext,
-  useContext,
-  useState,
-} from "react";
-import type {
-  StellarContextValue,
-  StellarNetwork,
-  WalletState,
-} from "../types";
-import { NETWORK_CONFIGS } from "../types";
+import * as React from "react"
+import { createContext, useContext, useState, type ReactNode } from "react"
+import type { StellarContextValue, StellarNetwork, WalletState } from "../types"
+import { NETWORK_CONFIGS } from "../types"
 
 const DEFAULT_WALLET: WalletState = {
   connected: false,
@@ -19,42 +11,35 @@ const DEFAULT_WALLET: WalletState = {
   walletName: null,
   connecting: false,
   error: null,
-};
-
-const StellarContext = createContext<StellarContextValue | null>(null);
-
-export interface StellarProviderProps {
-  network?: StellarNetwork;
-  children: React.ReactNode;
 }
 
-export function StellarProvider({
-  network = "testnet",
-  children,
-}: StellarProviderProps) {
-  const [wallet, setWallet] = useState<WalletState>(DEFAULT_WALLET);
+const StellarContext = createContext<StellarContextValue | null>(null)
+
+export interface StellarProviderProps {
+  network?: StellarNetwork
+  children: ReactNode
+}
+
+export function StellarProvider({ network = "testnet", children }: StellarProviderProps) {
+  const [wallet, setWallet] = useState<WalletState>(DEFAULT_WALLET)
 
   const value: StellarContextValue = {
     network,
     networkConfig: NETWORK_CONFIGS[network],
     wallet,
     setWallet,
-  };
+  }
 
-  return (
-    <StellarContext.Provider value={value}>
-      {children}
-    </StellarContext.Provider>
-  );
+  return <StellarContext.Provider value={value}>{children}</StellarContext.Provider>
 }
 
 export function useStellarContext(): StellarContextValue {
-  const ctx = useContext(StellarContext);
+  const ctx = useContext(StellarContext)
   if (!ctx) {
     throw new Error(
       "use-stellar: No StellarProvider found. " +
-      "Wrap your app in <StellarProvider> before using any use-stellar hooks."
-    );
+        "Wrap your app in <StellarProvider> before using any use-stellar hooks."
+    )
   }
-  return ctx;
+  return ctx
 }
