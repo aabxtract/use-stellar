@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
-import { useStellarContext }   from "../context/StellarProvider";
-import { getHorizonServer, parseHorizonBalance } from "../utils";
-import type { Asset, Balance } from "../types";
+import { useState, useEffect, useCallback, useRef } from "react"
+import { useStellarContext } from "../context/StellarProvider"
+import { getHorizonServer, parseHorizonBalance } from "../utils"
+import type { Asset, Balance } from "../types"
 
 // Default polling interval (ms) used when `watch` is enabled without an explicit
 // `interval`.
@@ -21,27 +21,56 @@ export interface UseBalanceReturn {
   error:       string | null;
   lastUpdated: Date | null;   // timestamp of the last successful fetch
   refetch:     () => void;
+  address?: string | null // defaults to connected wallet address
+  asset?: Asset // defaults to XLM
+  watch?: boolean // re-fetch every 10s
 }
 
+export interface UseBalanceReturn {
+  balance: string | null
+  balances: Balance[]
+  loading: boolean
+  error: string | null
+  refetch: () => void
+}
+
+/**
+ * Fetches the XLM or asset balance for the connected wallet or any Stellar address.
+ *
+ * @param options - Configuration options
+ * @param options.address - The Stellar address to fetch balances for. Defaults to the connected wallet.
+ * @param options.asset - The asset to return in `balance`. Defaults to XLM.
+ * @param options.watch - When true, re-fetches every 10 seconds.
+ * @returns `{ balance, balances, loading, error, refetch }`
+ *
+ * @example
+ * const { balance, loading } = useBalance({ asset: "XLM", watch: true })
+ */
 export function useBalance({
   address,
   asset = "XLM",
   watch = false,
   interval = DEFAULT_WATCH_INTERVAL,
 }: UseBalanceOptions = {}): UseBalanceReturn {
-  const { network, wallet }      = useStellarContext();
-  const resolvedAddress          = address ?? wallet.address;
+  const { network, wallet } = useStellarContext()
+  const resolvedAddress = address ?? wallet.address
 
   const [balances, setBalances]       = useState<Balance[]>([]);
   const [loading,  setLoading]        = useState(false);
   const [error,    setError]          = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [balances, setBalances] = useState<Balance[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const requestRef = useRef(0)
 
   const fetchBalances = useCallback(async () => {
-    if (!resolvedAddress) return;
+    if (!resolvedAddress) return
 
-    setLoading(true);
-    setError(null);
+    const fetchId = ++requestRef.current
+    setLoading(true)
+    setError(null)
 
     try {
       const server  = getHorizonServer(network);
@@ -49,15 +78,27 @@ export function useBalance({
       const parsed  = account.balances.map(parseHorizonBalance);
       setBalances(parsed);
       setLastUpdated(new Date());
+      const server = getHorizonServer(network)
+      const account = await server.loadAccount(resolvedAddress)
+      const parsed = account.balances.map(parseHorizonBalance)
+
+      if (fetchId !== requestRef.current) return
+
+      setBalances(parsed)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch balance");
+      if (fetchId !== requestRef.current) return
+      setError(err instanceof Error ? err.message : "Failed to fetch balance")
     } finally {
-      setLoading(false);
+      if (fetchId === requestRef.current) {
+        setLoading(false)
+      }
     }
-  }, [resolvedAddress, network]);
+  }, [resolvedAddress, network])
 
   useEffect(() => {
-    fetchBalances();
+    fetchBalances()
+
+    const interval = watch ? setInterval(fetchBalances, 10_000) : null
 
     if (!watch) return;
 
@@ -66,16 +107,23 @@ export function useBalance({
     const id = setInterval(fetchBalances, ms);
     return () => clearInterval(id);
   }, [fetchBalances, watch, interval]);
+    return () => {
+      if (interval) {
+        clearInterval(interval)
+      }
+      requestRef.current = -1
+    }
+  }, [fetchBalances, watch])
 
   // Find the specific asset balance
   const match = balances.find(b => {
-    if (asset === "XLM") return b.asset === "XLM";
+    if (asset === "XLM") return b.asset === "XLM"
     if (typeof asset === "object" && typeof b.asset === "object") {
-      return b.asset.code === asset.code && b.asset.issuer === asset.issuer;
+      return b.asset.code === asset.code && b.asset.issuer === asset.issuer
     }
-    return false;
-  });
-  const balance    = match?.balance ?? null;
+    return false
+  })
+  const balance = match?.balance ?? null
 
   return {
     balance,
@@ -84,5 +132,5 @@ export function useBalance({
     error,
     lastUpdated,
     refetch: fetchBalances,
-  };
+  }
 }
