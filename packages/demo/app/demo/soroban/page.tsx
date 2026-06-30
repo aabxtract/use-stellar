@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import type { CSSProperties, ReactNode } from "react";
-import { useSorobanContract, useWallet } from "use-stellar";
-import { DemoCard } from "../../../components/DemoCard";
+import { useState } from "react"
+import type { CSSProperties, ReactNode } from "react"
+import { useSorobanContract, useWallet } from "use-stellar"
+import { DemoCard } from "../../../components/DemoCard"
 
 const KNOWN_CONTRACT = "CDLZFC3SYJ4D57P2SAAQ573B5YTLK3GD6KBV7NQ4GZL5QLFLKZBCGP7T";
 const KNOWN_METHOD = "initialize";
@@ -15,30 +15,43 @@ export default function SorobanDemo() {
   const [query, setQuery] = useState({ contractId: "", method: "" });
   const { data, loading, error, refetch } = useSorobanContract(query);
   const disabled = !wallet.connected || loading || !contractId.trim() || !method.trim();
+  const wallet = useWallet()
+  const [contractId, setContractId] = useState("")
+  const [method, setMethod] = useState("")
+  const [query, setQuery] = useState({ contractId: "", method: "" })
+  const { data, loading, error, refetch } = useSorobanContract(query)
+  const disabled = !wallet.connected || loading || !contractId.trim() || !method.trim()
 
   function handleCall() {
-    setQuery({ contractId: contractId.trim(), method: method.trim() });
-    refetch();
+    setQuery({ contractId: contractId.trim(), method: method.trim() })
+    refetch()
   }
 
   return (
     <DemoCard
       hook="useSorobanContract"
-      description="Preview a Soroban contract call result while the hook is under active development."
+      description="Simulate a read-only Soroban contract method via the Soroban RPC. Results are decoded to native JS values where possible."
       code={`const { data, loading, error, refetch } = useSorobanContract({
-  contractId: "C...",
+  contractId: "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA",
   method: "balance",
+  args: ["GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOACCWN"],
 })`}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <Text color="#facc15">
           Write calls (requiring Freighter signing) are in active development -- see the hook-use-balance-watch issue. This demo covers read-only simulation calls only.
+          This hook is in active development. Write calls requiring signing are tracked in GitHub
+          issue #8.
         </Text>
 
         {!wallet.connected && (
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             <Text color="#facc15">Connect Freighter on testnet to simulate a Soroban call.</Text>
-            <button onClick={() => wallet.connect("freighter")} disabled={wallet.connecting} style={buttonStyle(wallet.connecting)}>
+            <button
+              onClick={() => wallet.connect("freighter")}
+              disabled={wallet.connecting}
+              style={buttonStyle(wallet.connecting)}
+            >
               {wallet.connecting ? "Connecting..." : "Connect wallet"}
             </button>
           </div>
@@ -66,15 +79,24 @@ export default function SorobanDemo() {
           {loading ? "Calling..." : "Call contract"}
         </button>
 
-        {error && <Text color="#f87171">{error}</Text>}
+        {error && <Text color="#f87171">{error.message}</Text>}
         {data !== null && (
-          <pre style={{ margin: 0, color: "#e0e0e0", fontSize: 13, fontFamily: "monospace", whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+          <pre
+            style={{
+              margin: 0,
+              color: "#e0e0e0",
+              fontSize: 13,
+              fontFamily: "monospace",
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+            }}
+          >
             {JSON.stringify(data, null, 2)}
           </pre>
         )}
       </div>
     </DemoCard>
-  );
+  )
 }
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
@@ -83,11 +105,11 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
       <span style={{ color: "#666", fontSize: 13 }}>{label}</span>
       {children}
     </label>
-  );
+  )
 }
 
 function Text({ children, color = "#e0e0e0" }: { children: string; color?: string }) {
-  return <p style={{ margin: 0, color, fontSize: 13 }}>{children}</p>;
+  return <p style={{ margin: 0, color, fontSize: 13 }}>{children}</p>
 }
 
 const inputStyle: CSSProperties = {
@@ -100,7 +122,7 @@ const inputStyle: CSSProperties = {
   fontFamily: "monospace",
   width: "100%",
   boxSizing: "border-box",
-};
+}
 
 function buttonStyle(disabled: boolean): CSSProperties {
   return {
@@ -113,5 +135,5 @@ function buttonStyle(disabled: boolean): CSSProperties {
     opacity: disabled ? 0.5 : 1,
     background: "#7dd3fc",
     color: "#0f0f0f",
-  };
+  }
 }
