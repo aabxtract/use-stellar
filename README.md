@@ -390,6 +390,7 @@ export function WalletButton() {
 | Wallet | Status |
 |---|---|
 | Freighter | ✅ Supported |
+| LOBSTR | ✅ Supported |
 | Albedo | Open issue — contributions welcome |
 | Rabet | Open issue — contributions welcome |
 | xBull | Open issue — contributions welcome |
@@ -422,6 +423,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). All contributions welcome — new hook
 ## Roadmap
 
 - [x] `useWallet` — Freighter connect / disconnect
+- [x] `useWallet` — LOBSTR connect / disconnect
 - [x] `useBalance` — XLM and issued asset balances
 - [x] `useAccount` — full account info
 - [x] `useSendPayment` — sign and submit payments

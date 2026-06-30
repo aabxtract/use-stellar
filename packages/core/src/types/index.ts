@@ -33,6 +33,7 @@ export const NETWORK_CONFIGS: Record<StellarNetwork, NetworkConfig> = {
   },
 }
 
+export type WalletType = "freighter" | "lobstr" | "albedo" | "rabet";
 /**
  * Supported wallet providers.
  */

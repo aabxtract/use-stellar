@@ -1,3 +1,16 @@
+import { useCallback } from "react";
+import {
+  getNetworkDetails,
+  isConnected,
+  requestAccess,
+} from "@stellar/freighter-api";
+import {
+  isConnected as lobstrIsConnected,
+  getPublicKey as lobstrGetPublicKey,
+} from "@lobstrco/signer-extension-api";
+import { useStellarContext } from "../context/StellarProvider";
+import type { WalletState, WalletType } from "../types";
+import { useCallback } from "react"
 import { useCallback, useMemo } from "react"
 import { useStellarContext } from "../context/StellarProvider"
 import { isBrowser } from "../utils"
@@ -48,6 +61,10 @@ export function useWallet(): UseWalletReturn {
         let walletNetwork: StellarNetwork
 
         if (walletType === "freighter") {
+          address = await connectFreighter(network);
+        } else if (walletType === "lobstr") {
+          address = await connectLobstr();
+          address = await connectFreighter(network)
           const result = await connectFreighter(network)
           address = result.address
           walletNetwork = result.walletNetwork
@@ -218,4 +235,22 @@ async function getFreighterNetworkInternal(
   }
 
   throw new Error(`Unknown network passphrase: ${networkDetails.networkPassphrase}`)
+}
+
+// ── Lobstr connector ───────────────────────────────────────────────────────
+async function connectLobstr(): Promise<string> {
+  const connected = await lobstrIsConnected();
+  if (!connected) {
+    throw new Error(
+      "LOBSTR signer extension not found. " +
+      "Install the LOBSTR Signer Extension and try again."
+    );
+  }
+
+  const publicKey = await lobstrGetPublicKey();
+  if (!publicKey) {
+    throw new Error("LOBSTR did not return a wallet address.");
+  }
+
+  return publicKey;
 }
